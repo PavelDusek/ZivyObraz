@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from PIL import Image, ImageDraw, ImageFont
 import requests
 import re
+from icecream import ic
 
 ############
 # Settings #
@@ -20,6 +21,7 @@ chars_limit_large, trimming_zone_large = 45, 35 #if exceeded, trim, #position wh
 line_count_limit_large = 9 #if exceeded, do not put a blank line in between texts
 font_size_header_large, font_size_text_large = 60, 38 
 target_image_large = "/var/www/html/dusek.fun/hesla800x480.png"
+target_image_large = "./hesla800x480.png"
 
 #Small ePaper display
 ePaperSmall = (400, 300)
@@ -27,6 +29,7 @@ chars_limit_small, trimming_zone_small = 35, 25 #if exceeded, trim, #position wh
 line_count_limit_small = 10 #if exceeded, do not put a blank line in between texts
 font_size_header_small, font_size_text_small = 35, 20 
 target_image_small = "/var/www/html/dusek.fun/hesla400x300.png"
+target_image_small = "./hesla400x300.png"
 
 ########
 # Code #
@@ -57,12 +60,14 @@ def get_losung_online(hesla_url):
     source = requests.get(hesla_url)
     texts = source.text.splitlines()
 
-    old_test_search = re.compile(rf'losung.OT\[\"{daystamp}\"\] = \'\|(.+)\';')
-    new_test_search = re.compile(rf'losung.NT\[\"{daystamp}\"\] = \'\|(.+)\';')
+    old_test_search = re.compile(rf'losung.OT\[\"{daystamp}\"\] = \'\|?(.+)\';')
+    new_test_search = re.compile(rf'losung.NT\[\"{daystamp}\"\] = \'\|?(.+)\';')
     old_testament, new_testament = "", ""
     for text in texts:
         old_found = old_test_search.search(text)
         new_found = new_test_search.search(text)
+        if daystamp in text:
+            ic(text)
         if old_found:
             old_testament = old_found.group(1).strip().replace("|", " | ")
         if new_found:
