@@ -60,8 +60,8 @@ def get_losung_online(hesla_url):
     source = requests.get(hesla_url)
     texts = source.text.splitlines()
 
-    old_test_search = re.compile(rf'losung.OT\[\"{daystamp}\"\] = \'\|?(.+)\';')
-    new_test_search = re.compile(rf'losung.NT\[\"{daystamp}\"\] = \'\|?(.+)\';')
+    old_test_search = re.compile(rf'losung\.OT\[\"{daystamp}\"\] = \'\|?(.+)\';')
+    new_test_search = re.compile(rf'losung\.NT\[\"{daystamp}\"\] = \'\|?(.+)\';')
     old_testament, new_testament = "", ""
     for text in texts:
         old_found = old_test_search.search(text)
